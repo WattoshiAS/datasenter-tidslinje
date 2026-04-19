@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datasenterregulering i Norge — Tidslinje 2023–2026</title>
+<meta name="description" content="Interaktiv tidslinje over datasenterregulering i Norge: ekomloven, kart- og planforskriften, rettsavgjørelser og Stortingets vedtak fra 2023 til april 2026.">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Datasenterregulering i Norge — Tidslinje 2023–2026">
+<meta property="og:description" content="Lover, forskrifter, rettsavgjørelser og politiske vedtak som former norsk datasenterregulering. Interaktiv oversikt med kilder.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="nb_NO">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Datasenterregulering i Norge — Tidslinje 2023–2026">
+<meta name="twitter:description" content="Lover, forskrifter, rettsavgjørelser og politiske vedtak som former norsk datasenterregulering. Interaktiv oversikt med kilder.">
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1a1d27;
+    --card-hover: #222633;
+    --accent: #4f8cff;
+    --accent2: #ff6b4f;
+    --accent3: #34d399;
+    --accent4: #fbbf24;
+    --text: #e2e4ea;
+    --text-muted: #8b8fa3;
+    --border: #2a2e3d;
+    --line: #2a2e3d;
+    --tag-bg: rgba(79,140,255,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .header {
+    text-align: center;
+    padding: 48px 24px 12px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .header p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  /* Filter bar */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    padding: 20px 24px 8px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .filter-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* Status summary */
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    max-width: 900px;
+    margin: 24px auto 12px;
+    padding: 0 24px;
+  }
+  .status-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+  .status-card .num {
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: block;
+  }
+  .status-card .label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .num.blue { color: var(--accent); }
+  .num.red { color: var(--accent2); }
+  .num.green { color: var(--accent3); }
+  .num.yellow { color: var(--accent4); }
+
+  /* Timeline */
+  .timeline-container {
+    max-width: 900px;
+    margin: 32px auto 60px;
+    padding: 0 24px;
+    position: relative;
+  }
+  .timeline-container::before {
+    content: '';
+    position: absolute;
+    left: 28px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--line);
+  }
+
+  .year-label {
+    position: relative;
+    padding-left: 60px;
+    margin: 32px 0 16px;
+  }
+  .year-label span {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 4px 14px;
+    border-radius: 16px;
+    position: relative;
+  }
+  .year-label::before {
+    content: '';
+    position: absolute;
+    left: 21px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--bg);
+    z-index: 2;
+  }
+
+  .event {
+    position: relative;
+    padding-left: 60px;
+    margin-bottom: 16px;
+    cursor: pointer;
+  }
+  .event::before {
+    content: '';
+    position: absolute;
+    left: 23px;
+    top: 20px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 2px solid var(--text-muted);
+    z-index: 2;
+    transition: all 0.2s;
+  }
+  .event.cat-lov::before { border-color: var(--accent); }
+  .event.cat-dom::before { border-color: var(--accent2); }
+  .event.cat-storting::before { border-color: var(--accent3); }
+  .event.cat-regjering::before { border-color: var(--accent4); }
+
+  .event-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    transition: all 0.25s;
+  }
+  .event:hover .event-card {
+    background: var(--card-hover);
+    border-color: var(--accent);
+    transform: translateX(4px);
+  }
+  .event-card .date {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .event-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    line-height: 1.35;
+  }
+  .event-card .summary {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+  .event-card .detail {
+    display: none;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-size: 0.85rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .event-card .detail.open { display: block; }
+  .event-card .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .tag {
+    font-size: 0.72rem;
+    padding: 2px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-weight: 600;
+  }
+  .tag-lov { background: rgba(79,140,255,0.15); color: var(--accent); }
+  .tag-dom { background: rgba(255,107,79,0.15); color: var(--accent2); }
+  .tag-storting { background: rgba(52,211,153,0.15); color: var(--accent3); }
+  .tag-regjering { background: rgba(251,191,36,0.15); color: var(--accent4); }
+  .tag-status {
+    font-weight: 700;
+  }
+  .tag-vedtatt { background: rgba(52,211,153,0.2); color: var(--accent3); }
+  .tag-pågår { background: rgba(251,191,36,0.2); color: var(--accent4); }
+  .tag-henlagt { background: rgba(255,107,79,0.2); color: var(--accent2); }
+
+  .event-card .link {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .event-card .link:hover { text-decoration: underline; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    padding: 0 24px 12px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 32px 24px;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    max-width: 900px;
+    margin: 0 auto;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.4rem; }
+    .status-grid { grid-template-columns: repeat(2, 1fr); }
+    .event { padding-left: 48px; }
+    .timeline-container::before { left: 20px; }
+    .event::before { left: 15px; }
+    .year-label { padding-left: 48px; }
+    .year-label::before { left: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Datasenterregulering i Norge</h1>
+  <p>Interaktiv tidslinje over lover, forskrifter, rettsavgjørelser og politiske vedtak fra 2023 til april 2026. Klikk på en hendelse for mer detaljer.</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div> Lov / forskrift</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div> Rettsavgjørelse</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent3)"></div> Stortinget</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent4)"></div> Regjering / forvaltning</div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" data-filter="all">Alle</button>
+  <button class="filter-btn" data-filter="lov">Lov / forskrift</button>
+  <button class="filter-btn" data-filter="dom">Rettsavgjørelser</button>
+  <button class="filter-btn" data-filter="storting">Stortinget</button>
+  <button class="filter-btn" data-filter="regjering">Regjering / forvaltning</button>
+</div>
+
+<div class="status-grid">
+  <div class="status-card">
+    <span class="num blue">104</span>
+    <span class="label">Registrerte datasentre (mars 2026)</span>
+  </div>
+  <div class="status-card">
+    <span class="num yellow">8</span>
+    <span class="label">Med kryptoutvinning</span>
+  </div>
+  <div class="status-card">
+    <span class="num green">3</span>
+    <span class="label">Vedtatte lovendringer</span>
+  </div>
+  <div class="status-card">
+    <span class="num red">2</span>
+    <span class="label">Rettsavgjørelser</span>
+  </div>
+</div>
+
+<div class="timeline-container" id="timeline">
+
+  <!-- 2023 -->
+  <div class="year-label"><span>2023</span></div>
+
+  <div class="event cat-regjering" data-cat="regjering">
+    <div class="event-card">
+      <div class="date">Juni 2023</div>
+      <h3>Regjeringens datasentermelding</h3>
+      <div class="summary">Regjeringen legger frem Meld. St. 8 (2022–2023) om datasenternæringen som en bærekraftig fremtidsnæring. Varsler kommende regulering.</div>
+      <div class="detail">
+        Meldingen fremhever behov for nasjonal kontroll, sikkerhetskrav og bærekraft. Stortinget behandler meldingen og ber regjeringen blant annet utrede krav om spillvarmeutnyttelse og vurdere strengere regulering av kryptodatasentre. Danner grunnlaget for den regulatoriske utviklingen som følger.
+      </div>
+      <div class="tags">
+        <span class="tag tag-regjering">Regjering</span>
+        <span class="tag tag-status tag-vedtatt">Vedtatt</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event cat-regjering" data-cat="regjering">
+    <div class="event-card">
+      <div class="date">Høst 2023</div>
+      <h3>Tilleggshøring: datasenterregulering i ny ekomlov</h3>
+      <div class="summary">Regjeringen sender tilleggshøring om å innta datasenterregulering i den nye ekomloven, inkludert registreringsplikt og sikkerhetskrav.</div>
+      <div class="detail">
+        Høringen foreslår registreringsplikt for alle datasenteroperatører over 500 kW, informasjonskrav, og sikkerhetskrav på linje med ekomtilbydere. Flere høringsinstanser uttrykker støtte, men datasenteraktører er bekymret for omfanget av rapporteringskravene.
+        <br><br>
+        <a class="link" href="https://www.regjeringen.no/no/dokumenter/tilleggshoring-til-ny-ekomlov-datasenterregulering/id2922385/" target="_blank">Tilleggshøring — regjeringen.no &rarr;</a>
+      </div>
+      <div class="tags">
+        <span class="tag tag-regjering">Regjering</span>
+        <span class="tag tag-lov">Høring</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2024 -->
+  <div class="year-label"><span>2024</span></div>
+
+  <div class="event cat-lov" data-cat="lov">
+    <div class="event-card">
+      <div class="date">13. desember 2024</div>
+      <h3>Ny ekomlov vedtatt av Stortinget</h3>
+      <div class="summary">Stortinget vedtar Lov om elektronisk kommunikasjon (LOV-2024-12-13-76), med ikrafttreden 1. januar 2025. Første gang datasentervirksomhet reguleres i norsk lov.</div>
+      <div class="detail">
+        Ny § 3-7 innfører registreringsplikt for datasenteroperatører hos Nkom, informasjonskrav om eierskap, kapasitet og energiforbruk, samt sikkerhetskrav tilsvarende ekomtilbydere. Loven gir Nkom tilsynsmyndighet med sanksjonsmuligheter — bøter på opptil 5 % av omsetning ved brudd. Datasentre over 500 kW faktisk uttak omfattes.
+        <br><br>
+        <a class="link" href="https://www.stortinget.no/no/Saker-og-publikasjoner/Saker/Sak/?p=98490" target="_blank">Lovvedtak — stortinget.no &rarr;</a>
+      </div>
+      <div class="tags">
+        <span class="tag tag-lov">Lov</span>
+        <span class="tag tag-status tag-vedtatt">Vedtatt</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2025 -->
+  <div class="year-label"><span>2025</span></div>
+
+  <div class="event cat-lov" data-cat="lov">
+    <div class="event-card">
+      <div class="date">1. januar 2025</div>
+      <h3>Ekomloven og datasenterforskriften trer i kraft</h3>
+      <div class="summary">Registreringsplikt, sikkerhetskrav og informasjonsplikt for alle datasentre over 500 kW. Norges første regulering av datasentervirksomhet.</div>
+      <div class="detail">
+        Fra denne datoen må alle datasenteroperatører registrere seg hos Nkom før oppstart. Forskriften stiller krav til opplysninger om eierstruktur, fysisk plassering, kapasitet, energiforbruk og andel kryptoutvinning. Nkom får ansvar for tilsyn og kan ilegge overtredelsesgebyr.
+        <br><br>
+        <a class="link" href="https://nkom.no/datasenter/registreringsplikt" target="_blank">Registreringsplikt — nkom.no &rarr;</a>
+      </div>
+      <div class="tags">
+        <span class="tag tag-lov">Forskrift</span>
+        <span class="tag tag-status tag-vedtatt">I kraft</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event cat-dom" data-cat="dom">
+    <div class="event-card">
+      <div class="date">April 2025</div>
+      <h3>Borgarting lagmannsrett: datasenter er ikke «industri»</h3>
+      <div class="summary">Lagmannsretten fastslår at kryptodatasentre ikke kan etableres på tomter regulert til industriformål. Staten vinner ankesaken.</div>
+      <div class="detail">
+        Retten vurderte at begrepet «industri» i plan- og bygningsloven forutsetter omdanning av fysiske innsatsfaktorer til omsettelige produkter. Datasentre — og særlig kryptoutvinning — innebærer ikke slik fysisk produksjon. Konsekvens: datasentre som er etablert på industriregulerte arealer uten dispensasjon kan være ulovlige. Dommen forsterker behovet for et eget arealformål for datasentre.
+        <br><br>
+        <a class="link" href="https://rett24.no/articles/staten-vant-ankesak-om-reguleringsplan--kryptoutvinning-er-ikke-industri" target="_blank">Omtale — Rett24 &rarr;</a>
+      </div>
+      <div class="tags">
+        <span class="tag tag-dom">Rettsavgjørelse</span>
+        <span class="tag tag-status tag-vedtatt">Rettskraftig</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event cat-storting" data-cat="storting">
+    <div class="event-card">
+      <div class="date">6. mai 2025</div>
+      <h3>Innst. 280 S (2024–2025) — Rødts forslag om datasenter-kontroll</h3>
+      <div class="summary">Stortinget behandler representantforslag fra Rødt om å «få kontroll over datasenterindustrien», inkludert moratorium og konsesjonsplikt. Forslaget får ikke flertall.</div>
+      <div class="detail">
+        Forslaget inkluderte midlertidig stopp i utbygging, utredning av permanent forbud mot kryptoutvinning, konsesjonsplikt, strengere spillvarmekrav og nye nettilknytningskriterier basert på samfunnsnytte. Flertallet avviste forslagene, men debattene signaliserte økende politisk press for strengere regulering.
+        <br><br>
+        <a class="link" href="https://www.stortinget.no/no/Saker-og-publikasjoner/Publikasjoner/Innstillinger/Stortinget/2024-2025/inns-202425-280s/?all=true" target="_blank">Innstilling — stortinget.no &rarr;</a>
+      </div>
+      <div class="tags">
+        <span class="tag tag-storting">Stortinget</span>
+        <span class="tag tag-status tag-henlagt">Ikke vedtatt</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event cat-regjering" data-cat="regjering">
+    <div class="event-card">
+      <div class="date">Juni 2025</div>
+      <h3>Regjeringens datasenterstrategi lansert</h3>
+      <div class="summary">Digitaliseringsminister Karianne Tung legger frem regjeringens strategi for en grønn, sikker og samfunnsnyttig datasenterindustri.</div>
+      <div class="detail">
+        Strategien setter tre hovedmål: sikkerhet (norsk data på norsk jord), bærekraft (fornybar energi, spillvarmeutnyttelse, lavt klimaavtrykk) og verdiskaping (arbeidsplasser, ringvirkninger). Varsler ytterligere tiltak mot kryptodatasentre og utredning av midlertidig forbud.
+        <br><br>
+        <a class="link" href="https://www.regjeringen.no/en/whats-new/the-government-introduces-clear-objectives-for-a-sustainable-and-socioeconomically-beneficial-data-centre-industry-highlighting-security-requirements-for-data-centres/id3113430/" target="_blank">Strategi — regjeringen.no &rarr;</a>
+      </div>
+      <div class="tags">
+        <span class="tag tag-regjering">Regjering</span>
+        <span class="tag tag-status tag-vedtatt">Publisert</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event cat-lov" data-cat="lov">
+    <div class="event-card">
+      <div class="date">1. juli 2025</div>
+      <h3>Ny kart- og planforskrift — datasenter som eget arealformål</h3>
+      <div class="summary">Datasenter innføres som eget arealformål i reguleringsplaner, sidestilt med industri og næringsbebyggelse. Kommuner får klar hjemmel til å styre plassering.</div>
+      <div class="detail">
+        Endringen løser den rettslige usikkerheten som Borgarting-dommen avdekket. Kommuner kan nå eksplisitt regulere arealer til datasenterbruk i sine planer, eller velge å ikke avsette slike arealer. Datasentre kan ikke lenger «gjemme seg» under industriformålet. Forskriften gjelder ikke retroaktivt for godkjente prosjekter.
+        <br><br>
+        <a class="link" href="https://lovdata.no/forskrift/2025-06-23-1258" target="_blank">Forskrift — Lovdata &rarr;</a>
+      </div>
+      <div class="tags">
+        <span class="tag tag-lov">Forskrift</span>
+        <span class="tag tag-status tag-vedtatt">I kraft</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event cat-regjering" data-cat="regjering">
+    <div class="event-card">
+      <div class="date">1. juli 2025</div>
+      <h3>Registreringsfrist utløper — 58 datasentre registrert</h3>
+      <div class="summary">Ved fristens utløp har 38 operatører registrert 58 datasentre hos Nkom. Tallet stiger raskt i månedene som følger.</div>
+      <div class="detail">
+        Nkom publiserer den første offisielle oversikten over datasenteroperatører i Norge. Listen oppdateres fortløpende. Innen oktober er tallet økt til 82 datasentre fra 51 operatører, og innen desember til 88 — hvorav åtte oppgir at mellom 33–100 % av strømforbruket går til kryptoutvinning.
+        <br><br>
+        <a class="link" href="https://nkom.no/datasenter/oversikt" target="_blank">Oversikt — nkom.no &rarr;</a>
+      </div>
+      <div class="tags">
+        <span class="tag tag-regjering">Nkom</span>
+        <span class="tag tag-status tag-vedtatt">Gjennomført</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event cat-dom" data-cat="dom">
+    <div class="event-card">
+      <div class="date">September 2025</div>
+      <h3>Høyesterett avviser anke — dommen er rettskraftig</h3>
+      <div class="summary">Høyesterett nekter å behandle anken. Borgarting-dommen om at datasenter ikke er «industri» blir stående som gjeldende rett.</div>
+      <div class="detail">
+        Med avvisningen er rettstilstanden klarlagt: datasenter kan ikke etableres på arealer regulert til «industri» uten dispensasjon eller omregulering. Kommuner som ønsker å legge til rette for datasenter må nå bruke det nye arealformålet fra kart- og planforskriften. Eksisterende datasentre på industriarealer har en usikker juridisk posisjon.
+      </div>
+      <div class="tags">
+        <span class="tag tag-dom">Høyesterett</span>
+        <span class="tag tag-status tag-vedtatt">Rettskraftig</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event cat-regjering" data-cat="regjering">
+    <div class="event-card">
+      <div class="date">Høst 2025</div>
+      <h3>Utredning: midlertidig forbud mot kryptodatasentre</h3>
+      <div class="summary">Regjeringen starter utredning av statlig planbestemmelse for et midlertidig og begrenset forbud mot nye energiintensive kryptodatasentre.</div>
+      <div class="detail">
+        Tiltaket skal gi et juridisk verktøy for å stanse nye kryptodatasentre mens helhetlig regulering utvikles. Utredningen skal ferdigstilles tidlig i 2026. Parallelt uttaler regjeringen i statsbudsjettet for 2026 at et generelt forbud trolig ikke er forenlig med EØS-forpliktelsene, noe som skaper usikkerhet om utfallet.
+        <br><br>
+        <a class="link" href="https://www.regjeringen.no/no/aktuelt/utvinning-av-kryptovaluta/id3110205/" target="_blank">Pressemelding — regjeringen.no &rarr;</a>
+      </div>
+      <div class="tags">
+        <span class="tag tag-regjering">Regjering</span>
+        <span class="tag tag-status tag-pågår">Pågår / usikkert</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event cat-regjering" data-cat="regjering">
+    <div class="event-card">
+      <div class="date">Oktober 2025 (Statsbudsjettet 2026)</div>
+      <h3>EØS-forbehold mot generelt kryptoforbud</h3>
+      <div class="summary">I statsbudsjettet skriver regjeringen at det «vanskelig kan ses grunnlag» for et generelt forbud mot kryptoutvinning innenfor EØS-regelverket.</div>
+      <div class="detail">
+        Regjeringen argumenterer for at mindre inngripende tiltak er mer forenlige med Norges EØS-forpliktelser enn et totalforbud. Rødt forhandler i budsjettforliket inn et vedtak om at regjeringen «snarest mulig» skal sende et høringsforslag som bidrar til å hindre nye kryptodatasentre. Signalet er tvetydig — ambisjonen om forbud lever videre, men juridisk handlerom er begrenset.
+        <br><br>
+        <a class="link" href="https://www.nettavisen.no/nyheter/regjeringen-kom-med-kryptoforbud-sa-forduftet-det/s/5-95-2783121" target="_blank">Analyse — Nettavisen &rarr;</a>
+      </div>
+      <div class="tags">
+        <span class="tag tag-regjering">Regjering</span>
+        <span class="tag tag-status tag-pågår">Usikker status</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event cat-regjering" data-cat="regjering">
+    <div class="event-card">
+      <div class="date">Høst 2025</div>
+      <h3>Nkom gjennomfører første tilsyn</h3>
+      <div class="summary">Nkom starter tilsyn med registrerte datasenteroperatører for å kartlegge sikkerhetssituasjonen i bransjen.</div>
+      <div class="detail">
+        Tilsynet er det første i sitt slag og markerer en ny fase der datasenterindustrien for første gang underlegges systematisk offentlig kontroll i Norge. Resultater forventes å danne grunnlag for videre regulering og eventuelle pålegg.
+        <br><br>
+        <a class="link" href="https://nkom.no/aktuelt/regjeringen-styrker-den-nasjonale-kontrollen-med-datasentre-i-norge" target="_blank">Nkom aktuelt &rarr;</a>
+      </div>
+      <div class="tags">
+        <span class="tag tag-regjering">Nkom</span>
+        <span class="tag tag-status tag-vedtatt">Gjennomført</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2026 -->
+  <div class="year-label"><span>2026</span></div>
+
+  <div class="event cat-storting" data-cat="storting">
+    <div class="event-card">
+      <div class="date">Januar 2026</div>
+      <h3>Dok 8:60 S — SV foreslår nasjonal konsesjonsordning</h3>
+      <div class="summary">SV fremmer representantforslag om nasjonal konsesjonsplikt for datasentre, med krav om samfunnsnytte, eierskapstransparens og spillvarmeutnyttelse.</div>
+      <div class="detail">
+        Forslaget vil innebære at enhver datasenteroperatør må søke en nasjonal myndighet (foreslått NVE) om tillatelse basert på samfunnsnyttekriterier. SV får støtte fra Høyre, Rødt, Sp og MDG i energi- og miljøkomiteen for å utrede en slik ordning, men det oppnås ikke flertall for vedtak om umiddelbar innføring.
+        <br><br>
+        <a class="link" href="https://www.stortinget.no/no/Saker-og-publikasjoner/Publikasjoner/Representantforslag/2025-2026/dok8-202526-060s/?all=true" target="_blank">Representantforslag — stortinget.no &rarr;</a>
+      </div>
+      <div class="tags">
+        <span class="tag tag-storting">Stortinget</span>
+        <span class="tag tag-status tag-pågår">Under behandling</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event cat-storting" data-cat="storting">
+    <div class="event-card">
+      <div class="date">Februar 2026</div>
+      <h3>Dok 8:105 S — Forslag om økt elavgift for datasentre</h3>
+      <div class="summary">Representantforslag om å utrede økt elavgift for datasentre som styringsinstrument. Resultater skal legges frem i statsbudsjettet for 2027.</div>
+      <div class="detail">
+        Bakgrunn: datasentre utgjør ca. halvparten av alle prosjekter i kraftkøen. En differensiert elavgift kan gi insentiv til energieffektivisering, bedre lokalisering og økte statlige inntekter. Forslagsstillerne peker på at Norge tidligere ga datasentre redusert elavgift — en ordning som nå er avviklet.
+        <br><br>
+        <a class="link" href="https://www.stortinget.no/no/Saker-og-publikasjoner/Publikasjoner/Representantforslag/2025-2026/dok8-202526-105s/" target="_blank">Representantforslag — stortinget.no &rarr;</a>
+      </div>
+      <div class="tags">
+        <span class="tag tag-storting">Stortinget</span>
+        <span class="tag tag-status tag-pågår">Under behandling</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event cat-storting" data-cat="storting">
+    <div class="event-card">
+      <div class="date">5. mars 2026</div>
+      <h3>Innst. 140 S — Stortinget vedtar kryptoforbud og samfunnsnytte-utredning</h3>
+      <div class="summary">Stortingsflertall ber regjeringen sende forslag på høring som hindrer nye kryptodatasentre. Vedtar også utredning av samfunnsnytten ved datasenteretableringer.</div>
+      <div class="detail">
+        <strong>Vedtatt med flertall (Ap, FrP, H, Sp, MDG, V):</strong><br>
+        1. Regjeringen bes snarest mulig sende høringsforslag som bidrar til å hindre etablering av kryptodatasentre i Norge.<br>
+        2. Regjeringen bes gjøre en grundig vurdering av samfunnsnytte og ringvirkninger av datasenteretableringer — sysselsetting, verdiskaping, beredskap og sikkerhet.<br><br>
+        <strong>Ikke vedtatt:</strong> Full konsesjonsordning (kontrollmyndighet for nasjonal utvikling) fikk ikke flertall.
+        <br><br>
+        <a class="link" href="https://www.stortinget.no/no/Saker-og-publikasjoner/Publikasjoner/Innstillinger/Stortinget/2025-2026/inns-202526-140s/?all=true" target="_blank">Innstilling — stortinget.no &rarr;</a>
+      </div>
+      <div class="tags">
+        <span class="tag tag-storting">Stortinget</span>
+        <span class="tag tag-status tag-vedtatt">Vedtatt</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event cat-regjering" data-cat="regjering">
+    <div class="event-card">
+      <div class="date">Mars 2026</div>
+      <h3>Nkom: 104 datasentre registrert</h3>
+      <div class="summary">Registeret viser 104 datasentre per mars 2026, opp fra 58 ved fristen i juli 2025. Nkom oppdaterer listen to ganger per måned.</div>
+      <div class="detail">
+        Veksten reflekterer både nyetableringer og etterregistrering av eksisterende anlegg. Åtte datasentre oppgir kryptoutvinning som en vesentlig del av virksomheten. Listen er offentlig tilgjengelig og gir for første gang full oversikt over hvem som driver datasentre i Norge.
+        <br><br>
+        <a class="link" href="https://nkom.no/datasenter/oversikt" target="_blank">Registeret — nkom.no &rarr;</a>
+      </div>
+      <div class="tags">
+        <span class="tag tag-regjering">Nkom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="event cat-regjering" data-cat="regjering">
+    <div class="event-card">
+      <div class="date">April 2026 — nå</div>
+      <h3>Ventende: kryptoforbudshøring og konsesjonsutredning</h3>
+      <div class="summary">Regjeringen har ennå ikke sendt kryptoforbudet på høring. Parallelt pågår utredning av elavgift og samfunnsnytte. EØS-rettslig handlingsrom er uavklart.</div>
+      <div class="detail">
+        <strong>Åpne tråder per april 2026:</strong><br>
+        &bull; Stortingets vedtak om høringsforslag for kryptoforbud — ikke gjennomført ennå<br>
+        &bull; Statlig planbestemmelse mot kryptodatasentre — utredning pågår, forsinket<br>
+        &bull; Utredning av økt elavgift for datasentre (Dok 8:105 S) — til behandling<br>
+        &bull; Samfunnsnyttevurdering — regjeringen skal rapportere tilbake<br>
+        &bull; Konsesjonsordning — bredt komitéflertall for utredning, men ikke vedtatt som politikk<br>
+        &bull; EØS-vurdering — setter rammer for hvor langt Norge kan gå med restriksjoner<br>
+        &bull; Mulig tak på samlet kryptomining-effekt — Energidepartementet vurderer
+      </div>
+      <div class="tags">
+        <span class="tag tag-regjering">Regjering</span>
+        <span class="tag tag-storting">Stortinget</span>
+        <span class="tag tag-status tag-pågår">Ventende</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Sammenstilt april 2026 med utgangspunkt i offentlige kilder: stortinget.no, regjeringen.no, nkom.no, Lovdata, Rett24 m.fl.<br>
+  Tidslinjen er ikke juridisk rådgivning. Klikk lenkene for primærkildene.
+  <div style="margin-top:16px; padding-top:12px; border-top:1px solid var(--border);">
+    Laget av <a href="https://wattoshi.no" target="_blank" style="color:var(--accent); text-decoration:none; font-weight:600;">Wattoshi.no</a>
+  </div>
+</div>
+
+<script>
+  // Toggle details
+  document.querySelectorAll('.event').forEach(ev => {
+    ev.addEventListener('click', e => {
+      if (e.target.closest('a')) return;
+      const d = ev.querySelector('.detail');
+      if (d) d.classList.toggle('open');
+    });
+  });
+
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      document.querySelectorAll('.event').forEach(ev => {
+        if (f === 'all' || ev.dataset.cat === f) {
+          ev.style.display = '';
+        } else {
+          ev.style.display = 'none';
+        }
+      });
+      // Always show year labels
+      document.querySelectorAll('.year-label').forEach(yl => {
+        yl.style.display = '';
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
